@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Page actuelle",
+  "version": "1.0.0",
+  "description": "Affiche le titre et l’URL de l’onglet actif.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_title": "Page actuelle",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sites actuels</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <h1 class="title">Sites actuels</h1>
+
+      <div class="row">
+        <span class="label">URL de la page</span>
+        <a id="pageUrl" class="value link" rel="noreferrer">Chargement…</a>
+      </div>
+
+      <div class="actions">
+        <button id="saveBtn" class="btn" type="button">Enregistrer Site</button>
+        <span id="status" class="status" aria-live="polite"></span>
+      </div>
+
+      <p id="error" class="error" hidden></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
