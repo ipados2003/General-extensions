@@ -87,16 +87,22 @@ async function deleteSavedSite(siteName, sites) {
             return;
           }
 
+          let statusMessage;
           if (savedSites.includes(site)) {
             await deleteSavedSite(site, savedSites);
-            setStatus("Confirmation: Site supprimé");
+            statusMessage = "Confirmation: Site supprimé";
           } else {
             await saveSites(site, savedSites);
-            setStatus("Confirmation: Site enregistré");
+            statusMessage = "Confirmation: Site enregistré";
           }
+          setStatus(statusMessage);
           const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
           if (tab?.id) {
-            await chrome.tabs.sendMessage(tab.id, { action: "RELOAD_CONTENT" });
+            try {
+              await chrome.tabs.sendMessage(tab.id, { action: "RELOAD_CONTENT" });
+            } catch {
+              setStatus(statusMessage + "(Veulleier actualiser la page)");
+            }
           }
         } catch (e) {
           setError("Erreur: " + (e && e.message ? e.message : String(e)));
