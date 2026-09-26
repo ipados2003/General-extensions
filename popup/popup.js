@@ -40,17 +40,15 @@ async function loadSavedSites() {
   return sites;
 }
 
-async function saveSites(siteName) {
-  const sites = await loadSavedSites();
+async function saveSites(siteName, sites) {
   if (sites.includes(siteName)) return sites;
-  sites.unshift(siteName);
-  await chrome.storage.sync.set({ [STORAGE_KEY]: sites });
+  const next = [siteName, ...sites];
+  await chrome.storage.sync.set({ [STORAGE_KEY]: next });
   setNameButton("Supprimer Site");
-  return sites;
+  return next;
 }
 
-async function deleteSavedSite(siteName) {
-  const sites = await loadSavedSites();
+async function deleteSavedSite(siteName, sites) {
   const next = sites.filter((s) => s !== siteName);
   await chrome.storage.sync.set({ [STORAGE_KEY]: next });
   setNameButton("Enregistrer Site");
@@ -81,24 +79,27 @@ async function deleteSavedSite(siteName) {
         setNameButton("Enregistrer Site");
       }
       saveBtn.addEventListener("click", async () => {
-        const newsites = await loadSavedSites();
-        setStatus("");
-        if (!site) {
-          setError("Site indisponible: impossible d’enregistrer cette page.");
-          return;
-        }
+        try {
+          const savedSites = await loadSavedSites();
+          setStatus("");
+          if (!site) {
+            setError("Site indisponible: impossible d’enregistrer cette page.");
+            return;
+          }
 
-        if (newsites.includes(site)) {
-          const nextList = await deleteSavedSite(site);
-          setStatus("Confirmation: Site supprimé");
-        }
-        else {
-          const next = await saveSites(site);
-          setStatus("Confirmation: Site enregistré");
-        }
-        const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-        if (tab?.id) {
-          chrome.tabs.sendMessage(tab.id, { action: "RELOAD_CONTENT" });
+          if (savedSites.includes(site)) {
+            await deleteSavedSite(site, savedSites);
+            setStatus("Confirmation: Site supprimé");
+          } else {
+            await saveSites(site, savedSites);
+            setStatus("Confirmation: Site enregistré");
+          }
+          const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+          if (tab?.id) {
+            await chrome.tabs.sendMessage(tab.id, { action: "RELOAD_CONTENT" });
+          }
+        } catch (e) {
+          setError("Erreur: " + (e && e.message ? e.message : String(e)));
         }
       });
     }
