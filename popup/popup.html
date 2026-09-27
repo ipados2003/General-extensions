@@ -1,13 +1,27 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sites actuels</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <main class="wrap">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sites actuels</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <main class="wrap">
+    <section id="siteTabs" class="siteTabs" hidden aria-label="Sections du site enregistré">
+      <div class="tabList" role="tablist" aria-label="Sections du site">
+        <button id="mainTab" class="tabButton isActive" type="button" role="tab" aria-selected="true"
+          aria-controls="mainPanel">Main</button>
+        <button id="soundTab" class="tabButton" type="button" role="tab" aria-selected="false"
+          aria-controls="soundPanel">Son</button>
+        <button id="videoTab" class="tabButton" type="button" role="tab" aria-selected="false"
+          aria-controls="videoPanel">Vidéo</button>
+      </div>
+    </section>
+
+    <section id="mainPanel" class="tabPanel" role="tabpanel" aria-labelledby="mainTab">
       <h1 class="title">Sites actuels</h1>
 
       <div class="row">
@@ -21,8 +35,12 @@
       </div>
 
       <p id="error" class="error" hidden></p>
-    </main>
+    </section>
+    <section id="soundPanel" class="tabPanel" role="tabpanel" aria-labelledby="soundTab" hidden></section>
+    <section id="videoPanel" class="tabPanel" role="tabpanel" aria-labelledby="videoTab" hidden></section>
+  </main>
 
-    <script src="popup.js"></script>
-  </body>
+  <script src="popup.js"></script>
+</body>
+
 </html>

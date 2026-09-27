@@ -34,6 +34,32 @@ function setStatus(message) {
   el.textContent = message;
 }
 
+function setTabsVisible(visible) {
+  const tabs = document.getElementById("siteTabs");
+  if (tabs) tabs.hidden = !visible;
+}
+
+function selectTab(tabName) {
+  const mainTab = document.getElementById("mainTab");
+  const soundTab = document.getElementById("soundTab");
+  const videoTab = document.getElementById("videoTab");
+  const mainPanel = document.getElementById("mainPanel");
+  const soundPanel = document.getElementById("soundPanel");
+  const videoPanel = document.getElementById("videoPanel");
+  const showMain = tabName === "main";
+  const showSound = tabName === "sound";
+
+  mainTab?.classList.toggle("isActive", showMain);
+  mainTab?.setAttribute("aria-selected", String(showMain));
+  soundTab?.classList.toggle("isActive", showSound);
+  soundTab?.setAttribute("aria-selected", String(showSound));
+  videoTab?.classList.toggle("isActive", !showMain && !showSound);
+  videoTab?.setAttribute("aria-selected", String(!showMain && !showSound));
+  if (mainPanel) mainPanel.hidden = !showMain;
+  if (soundPanel) soundPanel.hidden = !showSound;
+  if (videoPanel) videoPanel.hidden = showMain || showSound;
+}
+
 async function loadSavedSites() {
   const result = await chrome.storage.sync.get(STORAGE_KEY);
   const sites = Array.isArray(result[STORAGE_KEY]) ? result[STORAGE_KEY] : [];
@@ -70,6 +96,11 @@ async function deleteSavedSite(siteName, sites) {
     }
 
     const sites = await loadSavedSites();
+    setTabsVisible(sites.includes(site));
+
+    document.getElementById("mainTab")?.addEventListener("click", () => selectTab("main"));
+    document.getElementById("soundTab")?.addEventListener("click", () => selectTab("sound"));
+    document.getElementById("videoTab")?.addEventListener("click", () => selectTab("video"));
 
     const saveBtn = document.getElementById("saveBtn");
     if (saveBtn) {
@@ -90,10 +121,14 @@ async function deleteSavedSite(siteName, sites) {
           let statusMessage;
           if (savedSites.includes(site)) {
             await deleteSavedSite(site, savedSites);
-            statusMessage = "Confirmation: Site supprimé";
+            statusMessage = "Site supprimé";
+            setTabsVisible(false);
+            selectTab("main");
           } else {
             await saveSites(site, savedSites);
-            statusMessage = "Confirmation: Site enregistré";
+            statusMessage = "Site enregistré";
+            setTabsVisible(true);
+            selectTab("main");
           }
           setStatus(statusMessage);
           const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -101,7 +136,7 @@ async function deleteSavedSite(siteName, sites) {
             try {
               await chrome.tabs.sendMessage(tab.id, { action: "RELOAD_CONTENT" });
             } catch {
-              setStatus(statusMessage + "(Veulleier actualiser la page)");
+              setStatus(statusMessage + " (Veuillez actualiser la page)");
             }
           }
         } catch (e) {

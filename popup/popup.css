@@ -101,6 +101,38 @@ body {
   transform: translateY(0);
 }
 
+.siteTabs {
+  margin-bottom: 16px;
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabButton {
+  flex: 1;
+  appearance: none;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tabButton.isActive {
+  border-bottom-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.tabPanel {
+  min-height: 48px;
+}
+
 .status {
   font-size: 0.85rem;
   color: var(--success-color);
