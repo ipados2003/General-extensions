@@ -41,23 +41,23 @@ function setTabsVisible(visible) {
 
 function selectTab(tabName) {
   const mainTab = document.getElementById("mainTab");
-  const soundTab = document.getElementById("soundTab");
+  const imageScrollTab = document.getElementById("imageScrollTab");
   const videoTab = document.getElementById("videoTab");
   const mainPanel = document.getElementById("mainPanel");
-  const soundPanel = document.getElementById("soundPanel");
+  const imageScrollPanel = document.getElementById("imageScrollPanel");
   const videoPanel = document.getElementById("videoPanel");
   const showMain = tabName === "main";
-  const showSound = tabName === "sound";
+  const showImageScroll = tabName === "imageScroll";
 
   mainTab?.classList.toggle("isActive", showMain);
   mainTab?.setAttribute("aria-selected", String(showMain));
-  soundTab?.classList.toggle("isActive", showSound);
-  soundTab?.setAttribute("aria-selected", String(showSound));
-  videoTab?.classList.toggle("isActive", !showMain && !showSound);
-  videoTab?.setAttribute("aria-selected", String(!showMain && !showSound));
+  imageScrollTab?.classList.toggle("isActive", showImageScroll);
+  imageScrollTab?.setAttribute("aria-selected", String(showImageScroll));
+  videoTab?.classList.toggle("isActive", !showMain && !showImageScroll);
+  videoTab?.setAttribute("aria-selected", String(!showMain && !showImageScroll));
   if (mainPanel) mainPanel.hidden = !showMain;
-  if (soundPanel) soundPanel.hidden = !showSound;
-  if (videoPanel) videoPanel.hidden = showMain || showSound;
+  if (imageScrollPanel) imageScrollPanel.hidden = !showImageScroll;
+  if (videoPanel) videoPanel.hidden = showMain || showImageScroll;
 }
 
 async function loadSavedSites() {
@@ -99,7 +99,7 @@ async function deleteSavedSite(siteName, sites) {
     setTabsVisible(sites.includes(site));
 
     document.getElementById("mainTab")?.addEventListener("click", () => selectTab("main"));
-    document.getElementById("soundTab")?.addEventListener("click", () => selectTab("sound"));
+    document.getElementById("imageScrollTab")?.addEventListener("click", () => selectTab("imageScroll"));
     document.getElementById("videoTab")?.addEventListener("click", () => selectTab("video"));
 
     const saveBtn = document.getElementById("saveBtn");
